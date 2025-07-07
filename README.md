@@ -12,7 +12,7 @@ This repository spins up:
 git clone <repo> homelab
 cd homelab
 cp .env.example .env           # fill in your token + domain
-docker compose   -f traefik.yml   -f homepage.yml   -f cloudflared.yml   --env-file .env up -d
+docker compose up -d
 ```
 
 Visit **https://$HOMEPAGE_DOMAIN**.
