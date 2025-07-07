@@ -1,0 +1,8 @@
+name: homelab
+include:
+  - traefik.yml
+  - homepage.yml
+  - cloudflared.yml
+networks:
+  homelab_proxy:
+    driver: bridge

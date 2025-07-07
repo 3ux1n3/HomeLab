@@ -1,0 +1,34 @@
+########################
+#  Homelab stack ignore
+########################
+
+# ── Secrets / credentials ──
+.env                 # your real secrets
+*.env.local
+*.env.*.secret
+
+# ── Traefik ACME store (TLS cert private keys) ──
+traefik/acme.json
+
+# ── Homepage runtime files ──
+homepage/logs/
+homepage/*.log
+# keep config/*.yml, but ignore runtime cache if added later
+homepage/cache/
+homepage/tmp/
+
+# ── Cloudflared (if you ever persist credentials) ──
+cloudflared/*.json
+
+# ── Docker artefacts ──
+*.pid
+*.sock
+
+# ── IDE/editor noise ──
+.vscode/
+.idea/
+*.code-workspace
+
+# macOS & friends
+.DS_Store
+Thumbs.db
