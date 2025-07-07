@@ -15,7 +15,7 @@ cp .env.example .env           # fill in your token + domain
 docker compose up -d
 ```
 
-Visit **https://$HOMEPAGE_DOMAIN**.
+Visit **https://home.DOMAIN**.
 
 ## Adding services
 
