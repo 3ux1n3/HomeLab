@@ -1,0 +1,20 @@
+volumes:
+  caddy_data:
+  caddy_config:
+
+services:
+  # Caddy Reverse Proxy
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ../data/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - homelab_proxy
+    environment:
+      - DOMAIN=${DOMAIN}

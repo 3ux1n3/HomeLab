@@ -1,47 +1,84 @@
-# Minimal Homelab Docker Stack
+# HomeLab
 
-This repository spins up:
+A containerized homelab setup using Docker Compose with Cloudflare Tunnel for secure remote access.
 
-* **Traefik** – reverse proxy (internal only)
-* **Homepage** – start‑page dashboard
-* **Cloudflare Tunnel** – exposes your services to the internet with HTTPS and no open ports
+## Services
 
+- **Homepage** - Dashboard for your homelab services
+- **Caddy** - HTTP reverse proxy (SSL handled by Cloudflare)
+- **Cloudflare Tunnel** - Secure remote access without port forwarding
 
-### How to grab your Cloudflare Tunnel token (GUI method)
+## Quick Start
 
-Use this once, copy the token, paste it into .env as
-CLOUDFLARE_TUNNEL_TOKEN=…, and you’re done.
+1. Clone this repository
+2. Copy `.env.example` to `.env` and fill in your values
+3. Run `docker compose up -d`
 
-  Step	What you’ll see / do
-  1. Open Zero Trust	Go to https://one.dash.cloudflare.com. If it’s your first visit you’ll be asked to set a team name (e.g. hamza-team).
-  2. Find “Tunnels”	In the left sidebar open Networks ▸ Tunnels.
-  3. Create Tunnel	Click ➕ Create a tunnel → choose Cloudflared as connector → Next. Give it a friendly name like HomeLabTunnel and click Save tunnel.   ￼
-  4. Get the Docker command	Zero Trust now shows an “Install and run connector” page. Pick Docker. It outputs something like:  docker run cloudflare/cloudflared:latest tunnel --no-autoupdate run --token eyJh...   ￼
-  5. Copy only the token	Everything after --token (a long eyJh… base-64 string) is your tunnel token.
-  6. (Optional) Add a hostname	Still in the wizard, click Route traffic → Public hostnames → set Subdomain = home and Domain = domain.com, Service HTTP, URL traefik:80 . Save. You can also skip this here and define hostnames later.
-  7. Drop token into .env	ini\nCLOUDFLARE_TUNNEL_TOKEN=eyJh...\nHOMEPAGE_DOMAIN=home.3ux1n3.dev\n
-  8. Start your stack	bash\ndocker compose up -d\n Cloudflared connects outbound, Traefik listens internally, and https://home.domain.com is live over HTTPS – no ports or certs needed.   ￼
-  
-  What if you need the token later?
-  
-  Zero Trust → Networks ▸ Tunnels ▸ HomeLabTunnel ▸ Connector tokens → click the copy icon.
+## Configuration
 
----- 
-## Quick start
+### Environment Variables
 
-```bash
-git clone <repo> homelab
-cd homelab
-cp .env.example .env           # fill in your token + domain
-docker compose up -d
+Copy `.env.example` to `.env` and configure:
+
+```env
+DOMAIN=yourdomain.com
+EMAIL=your-email@example.com
+CLOUDFLARE_TUNNEL_TOKEN=your_tunnel_token_here
 ```
 
-Visit **https://home.DOMAIN**.
+### Cloudflare Tunnel Setup
 
-## Adding services
+1. Create a tunnel in Cloudflare Zero Trust dashboard
+2. Configure public hostname `home.yourdomain.com` pointing to `http://caddy:80`
+3. Copy the tunnel token to your `.env` file
 
-1. Put the new service on the `homelab_proxy` network.  
-2. Give it Traefik labels (`Host(\`sub.example.com\`)`, `service port`).  
-3. Add a *public hostname* for that subdomain in the same Cloudflare Tunnel.
+## Services Access
 
-Enjoy!
+- Homepage: `https://home.yourdomain.com`
+
+## Architecture
+
+```
+Internet → Cloudflare (SSL) → Tunnel → Caddy (HTTP) → Homepage
+```
+
+Cloudflare handles SSL termination, while Caddy serves as an internal HTTP reverse proxy.
+
+## File Structure
+
+```
+├── docker-compose.yml          # Main compose file with includes
+├── compose/                    # Individual service definitions
+│   ├── caddy.yml
+│   ├── cloudflared.yml
+│   └── homepage.yml
+├── data/                       # Service data and configs
+│   ├── caddy/
+│   │   └── Caddyfile
+│   └── homepage/
+│       └── config/             # Homepage configuration
+└── .env.example               # Environment variables template
+```
+
+## Adding New Services
+
+1. Create a new compose file in `compose/` directory
+2. Add it to the `include` section in `docker-compose.yml`
+3. Configure Caddy to proxy to your new service in `data/caddy/Caddyfile`
+4. Update your Cloudflare tunnel configuration if needed
+
+## How to Get Your Cloudflare Tunnel Token
+
+1. Go to [Cloudflare Zero Trust](https://one.dash.cloudflare.com)
+2. Navigate to **Networks** → **Tunnels**
+3. Click **Create a tunnel** → Choose **Cloudflared** → Give it a name
+4. Copy the token from the Docker command (the long string after `--token`)
+5. Add a public hostname: `home.yourdomain.com` → `http://caddy:80`
+6. Paste the token into your `.env` file
+
+## Features
+
+- **Zero Port Forwarding**: All traffic goes through Cloudflare Tunnel
+- **Automatic SSL**: Cloudflare handles certificates
+- **Modular Design**: Easy to add/remove services
+- **Environment-based**: Configuration through .env file

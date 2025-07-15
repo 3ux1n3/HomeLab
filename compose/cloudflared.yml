@@ -1,4 +1,5 @@
 services:
+  # Cloudflare Tunnel
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
@@ -6,3 +7,5 @@ services:
     command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     networks:
       - homelab_proxy
+    depends_on:
+      - caddy

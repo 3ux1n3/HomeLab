@@ -1,0 +1,15 @@
+{
+    # Disable automatic HTTPS since Cloudflare tunnel handles SSL
+    auto_https off
+}
+
+# HTTP only - Cloudflare tunnel terminates SSL
+:80 {
+    reverse_proxy homepage:3000
+}
+
+# Example: Add more services here
+# service.{$DOMAIN} {
+#     reverse_proxy service_name:port
+# }
+

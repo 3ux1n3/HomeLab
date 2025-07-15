@@ -1,0 +1,16 @@
+services:
+  # Homepage Dashboard
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    volumes:
+      - ../data/homepage/config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
+    networks:
+      - homelab_proxy
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=home.${DOMAIN}
+    labels:
+      - "caddy=home.${DOMAIN}"
+      - "caddy.reverse_proxy={{upstreams 3000}}"

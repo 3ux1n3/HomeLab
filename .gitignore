@@ -11,11 +11,11 @@
 traefik/acme.json
 
 # ── Homepage runtime files ──
-homepage/logs/
-homepage/*.log
+data/homepage/logs/
+data/homepage/*.log
 # keep config/*.yml, but ignore runtime cache if added later
-homepage/cache/
-homepage/tmp/
+data/homepage/cache/
+data/homepage/tmp/
 
 # ── Cloudflared (if you ever persist credentials) ──
 cloudflared/*.json
@@ -32,3 +32,10 @@ cloudflared/*.json
 # macOS & friends
 .DS_Store
 Thumbs.db
+
+# ── Log files ──
+*.log
+logs/
+
+# ── Claude Code ──
+.claude
