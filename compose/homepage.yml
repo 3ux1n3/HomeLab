@@ -11,6 +11,7 @@ services:
       - homelab_proxy
     environment:
       - HOMEPAGE_ALLOWED_HOSTS=home.${DOMAIN}
+      - HOMEPAGE_VAR_DOMAIN=${DOMAIN}
     labels:
       - "caddy=home.${DOMAIN}"
       - "caddy.reverse_proxy={{upstreams 3000}}"

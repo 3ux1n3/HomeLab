@@ -7,3 +7,4 @@ include:
   - compose/caddy.yml
   - compose/cloudflared.yml
   - compose/homepage.yml
+  - compose/portainer.yml

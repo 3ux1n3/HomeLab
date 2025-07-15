@@ -5,6 +5,15 @@
 
 # HTTP only - Cloudflare tunnel terminates SSL
 :80 {
+    # Portainer management interface
+    handle_path /portainer* {
+        reverse_proxy portainer:9000 {
+            header_up X-Forwarded-Proto https
+            header_up X-Forwarded-Host {host}
+        }
+    }
+
+    # Default route to homepage
     reverse_proxy homepage:3000
 }
 

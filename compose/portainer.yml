@@ -1,0 +1,15 @@
+volumes:
+  portainer_data:
+
+services:
+  # Portainer Docker Management
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    command: --base-url=/portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - homelab_proxy

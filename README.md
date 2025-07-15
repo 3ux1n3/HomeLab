@@ -5,6 +5,7 @@ A containerized homelab setup using Docker Compose with Cloudflare Tunnel for se
 ## Services
 
 - **Homepage** - Dashboard for your homelab services
+- **Portainer** - Docker container management interface
 - **Caddy** - HTTP reverse proxy (SSL handled by Cloudflare)
 - **Cloudflare Tunnel** - Secure remote access without port forwarding
 
@@ -35,14 +36,15 @@ CLOUDFLARE_TUNNEL_TOKEN=your_tunnel_token_here
 ## Services Access
 
 - Homepage: `https://home.yourdomain.com`
+- Portainer: `https://home.yourdomain.com/portainer`
 
 ## Architecture
 
 ```
-Internet → Cloudflare (SSL) → Tunnel → Caddy (HTTP) → Homepage
+Internet → Cloudflare (SSL) → Tunnel → Caddy (HTTP) → Homepage/Portainer
 ```
 
-Cloudflare handles SSL termination, while Caddy serves as an internal HTTP reverse proxy.
+Cloudflare handles SSL termination, while Caddy serves as an internal HTTP reverse proxy with path-based routing.
 
 ## File Structure
 
@@ -51,7 +53,8 @@ Cloudflare handles SSL termination, while Caddy serves as an internal HTTP rever
 ├── compose/                    # Individual service definitions
 │   ├── caddy.yml
 │   ├── cloudflared.yml
-│   └── homepage.yml
+│   ├── homepage.yml
+│   └── portainer.yml
 ├── data/                       # Service data and configs
 │   ├── caddy/
 │   │   └── Caddyfile
@@ -80,5 +83,7 @@ Cloudflare handles SSL termination, while Caddy serves as an internal HTTP rever
 
 - **Zero Port Forwarding**: All traffic goes through Cloudflare Tunnel
 - **Automatic SSL**: Cloudflare handles certificates
+- **Docker Management**: Portainer for remote container management
+- **Path-based Routing**: Single domain, multiple services
 - **Modular Design**: Easy to add/remove services
 - **Environment-based**: Configuration through .env file
